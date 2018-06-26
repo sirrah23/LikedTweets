@@ -4,7 +4,9 @@ to you on the console.
 """
 import json
 import random
+import subprocess
 import tweepy
+import click
 
 
 """
@@ -31,7 +33,7 @@ Obtains the url associated with a tweet, if that information is available.
 """
 def get_tweet_url(tweet):
     try:
-        return tweet.entities['media'][0]['url']
+        return "https://www.twitter.com/statuses/{}".format(tweet.id)
     except:
         return None
 
@@ -45,12 +47,12 @@ def get_random_favorite_tweet_details(api):
     return (tweet.text, get_tweet_url(tweet))
 
 """
-Format the text and url associated with a Tweet so it can be printed to the
+Format the text and url associated with a tweet so it can be printed to the
 screen.
 """
-def format_output(tweet_text, tweet_url):
-    
-    return """
+def format_output(tweet_text, tweet_url, preface=""):
+    msg = preface
+    msg = msg + """
     Check this out!:
 
     =====
@@ -59,14 +61,41 @@ def format_output(tweet_text, tweet_url):
     {}
 
     =====
-    URL 
+    URL
     =====
     {}
     """.format(tweet_text, tweet_url)
+    return msg
 
-if __name__ == "__main__":
+"""
+Open a given url in your default browser...assumed to be on a Linux machine.
+
+Returns True if success else False.
+"""
+def open_url(url):
+    if not url:
+        return False
+    res = subprocess.call(["xdg-open", url])
+    return res == 0 # Success
+
+"""
+The command line interface that will get a random favorite tweet and either
+print it to the console or open it in your default browser.
+"""
+@click.command()
+@click.option("--browser/--no-browser", default=False, help="Open the tweet in your default browser")
+def likedtweets(browser):
     creds = read_credentials("cred.json")
     api = get_api_connection(creds)
     tweet_text, tweet_url = get_random_favorite_tweet_details(api)
-    output = format_output(tweet_text, tweet_url)
-    print(output)
+    if not browser:
+        print(format_output(tweet_text, tweet_url))
+    else:
+        browser_success = open_url(tweet_url)
+        if not browser_success:
+            print(format_output(tweet_text, tweet_url, preface="Unable to open in browser...\n"))
+
+
+if __name__ == "__main__":
+    likedtweets()
+

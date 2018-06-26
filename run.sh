@@ -1,3 +1,3 @@
 #!/bin/bash
 
-pipenv run python likedtweets.py
+pipenv run python likedtweets.py $1

@@ -25,5 +25,7 @@ following keys are expected to be in the file:
 
 ## Run
 ```
-./run.sh
+./run.sh              # Print tweet contents to console
+./run.sh --no-browser # Print tweet contents to console
+./run.sh --browser    # Open tweet in your default browser
 ```
