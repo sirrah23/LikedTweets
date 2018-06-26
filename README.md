@@ -25,6 +25,5 @@ following keys are expected to be in the file:
 
 ## Run
 ```
-pipenv shell
-python likedtweets.py
+./run.sh
 ```
