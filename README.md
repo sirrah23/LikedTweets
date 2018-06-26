@@ -1,5 +1,5 @@
 # LikedTweets
-Randomly obtain a tweet that you recently liked.
+Randomly obtain a tweet that you've recently liked.
 
 ## Prerequisites
 It is assumed that:
