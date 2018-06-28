@@ -79,6 +79,17 @@ def open_url(url):
     return res == 0 # Success
 
 """
+Print a tweet to the screen or open it in your internet browser.
+"""
+def print_or_browse(tweet_text, tweet_url, browser):
+    if not browser:
+        print(format_output(tweet_text, tweet_url))
+    else:
+        browser_success = open_url(tweet_url)
+        if not browser_success:
+            print(format_output(tweet_text, tweet_url, preface="Unable to open in browser...\n"))
+
+"""
 The command line interface that will get a random favorite tweet and either
 print it to the console or open it in your default browser.
 """
@@ -88,14 +99,8 @@ def likedtweets(browser):
     creds = read_credentials("cred.json")
     api = get_api_connection(creds)
     tweet_text, tweet_url = get_random_favorite_tweet_details(api)
-    if not browser:
-        print(format_output(tweet_text, tweet_url))
-    else:
-        browser_success = open_url(tweet_url)
-        if not browser_success:
-            print(format_output(tweet_text, tweet_url, preface="Unable to open in browser...\n"))
+    print_or_browse(tweet_text, tweet_url, browser)
 
 
 if __name__ == "__main__":
     likedtweets()
-
